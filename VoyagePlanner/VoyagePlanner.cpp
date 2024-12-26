@@ -10,6 +10,8 @@ void returnAllVoyages();
 void searchByIDRange();
 void searchVoyagesByDestination();
 void orderVoyagesByDestination();
+void saveVoyagesToFile();
+void readVoyagesFromFile();
 
 
 struct seaTrips {
@@ -31,10 +33,10 @@ int currentVoyages = 0;
 void Menu() {
 	system("chcp 1251");
 	system("cls");
-	cout <<"1. Äîáàâÿíå íà ìîðñêè ïúòóâàíèÿ" << endl;
+	cout <<"1. Ð”Ð¾Ð±Ð°Ð²ÑÐ½Ðµ Ð½Ð° Ð¼Ð¾Ñ€ÑÐºÐ¸ Ð¿ÑŠÑ‚ÑƒÐ²Ð°Ð½Ð¸Ñ" << endl;
 	int choice = 0;
 	do {
-		cout << "Èçáåðåòå îïöèÿ: ";
+		cout << "Ð˜Ð·Ð±ÐµÑ€ÐµÑ‚Ðµ Ð¾Ð¿Ñ†Ð¸Ñ: ";
 		cin >> choice;
 		switch(choice){
 		case 1: AddVoyage(); 
@@ -47,18 +49,24 @@ void Menu() {
 			break;
 		case 5: orderVoyagesByDestination(); 
 			break;
+		case 6: saveVoyagesToFile();
+			break;
+		case 7: readVoyagesFromFile();
+			break;
+		default: cout << "ÐÐµÐ²Ð°Ð»Ð¸Ð´Ð½Ð° Ð¾Ð¿Ñ†Ð¸Ñ!" << endl;
+			break;
 
 		}
-	} while (choice != 6);
+	} while (choice != 8);
 }
 
 void AddVoyage() {
 	system("cls");
-	cout << "Êîëêî ïúòóâàíèÿ èñêàòå äà äîáàâèòå?: ";
+	cout << "ÐšÐ¾Ð»ÐºÐ¾ Ð¿ÑŠÑ‚ÑƒÐ²Ð°Ð½Ð¸Ñ Ð¸ÑÐºÐ°Ñ‚Ðµ Ð´Ð° Ð´Ð¾Ð±Ð°Ð²Ð¸Ñ‚Ðµ?: ";
 	int numOfVoyages;
 	cin >> numOfVoyages;
 	if(currentVoyages + numOfVoyages > MAX_VOYAGES){
-		cout << "Íÿìà äîñòàòú÷íî ìÿñòî çà ïúòóâàíèÿ" << endl;
+		cout << "ÐÑÐ¼Ð° Ð´Ð¾ÑÑ‚Ð°Ñ‚ÑŠÑ‡Ð½Ð¾ Ð¼ÑÑÑ‚Ð¾ Ð·Ð° Ð¿ÑŠÑ‚ÑƒÐ²Ð°Ð½Ð¸Ñ" << endl;
 		return;
 	}
 	cin.ignore();
@@ -66,109 +74,109 @@ void AddVoyage() {
 	{
 		seaTrips newVoyage;
 		newVoyage.voyageID = currentVoyages + 1;
-		cout << "Äîáàâÿíå íà ìîðñêî ïúòóâàíå " << "¹" << newVoyage.voyageID << endl;
-		cout << "Ìàðøðóò: ";
+		cout << "Ð”Ð¾Ð±Ð°Ð²ÑÐ½Ðµ Ð½Ð° Ð¼Ð¾Ñ€ÑÐºÐ¾ Ð¿ÑŠÑ‚ÑƒÐ²Ð°Ð½Ðµ " << "â„–" << newVoyage.voyageID << endl;
+		cout << "ÐœÐ°Ñ€ÑˆÑ€ÑƒÑ‚: ";
 		getline(cin, newVoyage.route);
-		cout << "Èìå íà êîðàáà: ";
+		cout << "Ð˜Ð¼Ðµ Ð½Ð° ÐºÐ¾Ñ€Ð°Ð±Ð°: ";
 		getline(cin, newVoyage.shipName);
-		cout << "Èìå íà êàïèòàíà: ";
+		cout << "Ð˜Ð¼Ðµ Ð½Ð° ÐºÐ°Ð¿Ð¸Ñ‚Ð°Ð½Ð°: ";
 		getline(cin, newVoyage.captainName);
-		cout << "Öåíà íà áèëåòè ïúðâà êëàñà: ";
+		cout << "Ð¦ÐµÐ½Ð° Ð½Ð° Ð±Ð¸Ð»ÐµÑ‚Ð¸ Ð¿ÑŠÑ€Ð²Ð° ÐºÐ»Ð°ÑÐ°: ";
 		cin >> newVoyage.ticketPriceFirstClass;
 		cin.ignore();
-		cout << "Öåíà íà áèëåòè âòîðà êëàñà: ";
+		cout << "Ð¦ÐµÐ½Ð° Ð½Ð° Ð±Ð¸Ð»ÐµÑ‚Ð¸ Ð²Ñ‚Ð¾Ñ€Ð° ÐºÐ»Ð°ÑÐ°: ";
 		cin >> newVoyage.ticketPriceSecondClass;
 		cin.ignore();
-		cout << "Áðîé ïúòíèöè: ";
+		cout << "Ð‘Ñ€Ð¾Ð¹ Ð¿ÑŠÑ‚Ð½Ð¸Ñ†Ð¸: ";
 		cin >> newVoyage.amountOfPassengers;
 		cin.ignore();
-		cout << "Äàòà íà òðúãâàíå: ";
+		cout << "Ð”Ð°Ñ‚Ð° Ð½Ð° Ñ‚Ñ€ÑŠÐ³Ð²Ð°Ð½Ðµ: ";
 		getline(cin, newVoyage.departureDate);
-		cout << "Äàòà íà ïðèñòèãàíå: ";
+		cout << "Ð”Ð°Ñ‚Ð° Ð½Ð° Ð¿Ñ€Ð¸ÑÑ‚Ð¸Ð³Ð°Ð½Ðµ: ";
 		getline(cin, newVoyage.arrivalDate);
-		cout << "Ñòàòóñ: ";
+		cout << "Ð¡Ñ‚Ð°Ñ‚ÑƒÑ: ";
 		getline(cin, newVoyage.status);
 		voyages[currentVoyages] = newVoyage;
 		currentVoyages++;
 	}
-	cout << "Ïúòóâàíèÿòà áÿõà äîáàâåíè óñïåøíî!" << endl;
+	cout << "ÐŸÑŠÑ‚ÑƒÐ²Ð°Ð½Ð¸ÑÑ‚Ð° Ð±ÑÑ…Ð° Ð´Ð¾Ð±Ð°Ð²ÐµÐ½Ð¸ ÑƒÑÐ¿ÐµÑˆÐ½Ð¾!" << endl;
 	system("pause");
 }
 
 void returnAllVoyages()
 {
 	system("cls");
-	cout<<"Âñè÷êè ïúòóâàíèÿ: "<<endl;
+	cout<<"Ð’ÑÐ¸Ñ‡ÐºÐ¸ Ð¿ÑŠÑ‚ÑƒÐ²Ð°Ð½Ð¸Ñ: "<<endl;
 	for (int i = 0; i < currentVoyages; i++)
 	{
-		cout << "Ìîðñêî ïúòóâàíå ¹" << voyages[i].voyageID << endl;
-		cout << "Ìàðøðóò: " << voyages[i].route << endl;
-		cout << "Èìå íà êîðàáà: " << voyages[i].shipName << endl;
-		cout << "Èìå íà êàïèòàíà: " << voyages[i].captainName << endl;
-		cout << "Öåíà íà áèëåòè ïúðâà êëàñà: " << voyages[i].ticketPriceFirstClass << endl;
-		cout << "Öåíà íà áèëåòè âòîðà êëàñà: " << voyages[i].ticketPriceSecondClass << endl;
-		cout << "Áðîé ïúòíèöè: " << voyages[i].amountOfPassengers << endl;
-		cout << "Äàòà íà òðúãâàíå: " << voyages[i].departureDate << endl;
-		cout << "Äàòà íà ïðèñòèãàíå: " << voyages[i].arrivalDate << endl;
-		cout << "Ñòàòóñ: " << voyages[i].status << endl;
+		cout << "ÐœÐ¾Ñ€ÑÐºÐ¾ Ð¿ÑŠÑ‚ÑƒÐ²Ð°Ð½Ðµ â„–" << voyages[i].voyageID << endl;
+		cout << "ÐœÐ°Ñ€ÑˆÑ€ÑƒÑ‚: " << voyages[i].route << endl;
+		cout << "Ð˜Ð¼Ðµ Ð½Ð° ÐºÐ¾Ñ€Ð°Ð±Ð°: " << voyages[i].shipName << endl;
+		cout << "Ð˜Ð¼Ðµ Ð½Ð° ÐºÐ°Ð¿Ð¸Ñ‚Ð°Ð½Ð°: " << voyages[i].captainName << endl;
+		cout << "Ð¦ÐµÐ½Ð° Ð½Ð° Ð±Ð¸Ð»ÐµÑ‚Ð¸ Ð¿ÑŠÑ€Ð²Ð° ÐºÐ»Ð°ÑÐ°: " << voyages[i].ticketPriceFirstClass << endl;
+		cout << "Ð¦ÐµÐ½Ð° Ð½Ð° Ð±Ð¸Ð»ÐµÑ‚Ð¸ Ð²Ñ‚Ð¾Ñ€Ð° ÐºÐ»Ð°ÑÐ°: " << voyages[i].ticketPriceSecondClass << endl;
+		cout << "Ð‘Ñ€Ð¾Ð¹ Ð¿ÑŠÑ‚Ð½Ð¸Ñ†Ð¸: " << voyages[i].amountOfPassengers << endl;
+		cout << "Ð”Ð°Ñ‚Ð° Ð½Ð° Ñ‚Ñ€ÑŠÐ³Ð²Ð°Ð½Ðµ: " << voyages[i].departureDate << endl;
+		cout << "Ð”Ð°Ñ‚Ð° Ð½Ð° Ð¿Ñ€Ð¸ÑÑ‚Ð¸Ð³Ð°Ð½Ðµ: " << voyages[i].arrivalDate << endl;
+		cout << "Ð¡Ñ‚Ð°Ñ‚ÑƒÑ: " << voyages[i].status << endl;
 	}
 	system("pause");
 }
 void searchByIDRange() {
 	system("cls");
-	cout << "Òúðñåíå íà ìîðñêè ïúòóâàíèÿ â èíòåðâàë îò ID" << endl;
+	cout << "Ð¢ÑŠÑ€ÑÐµÐ½Ðµ Ð½Ð° Ð¼Ð¾Ñ€ÑÐºÐ¸ Ð¿ÑŠÑ‚ÑƒÐ²Ð°Ð½Ð¸Ñ Ð² Ð¸Ð½Ñ‚ÐµÑ€Ð²Ð°Ð» Ð¾Ñ‚ ID" << endl;
 	int minID, maxID;
-	cout << "Âúâåäåòå ìèíèìàëíî ID: ";
+	cout << "Ð’ÑŠÐ²ÐµÐ´ÐµÑ‚Ðµ Ð¼Ð¸Ð½Ð¸Ð¼Ð°Ð»Ð½Ð¾ ID: ";
 	cin >> minID;
-	cout << "Âúâåäåòå ìàêñèìàëíî ID: ";
+	cout << "Ð’ÑŠÐ²ÐµÐ´ÐµÑ‚Ðµ Ð¼Ð°ÐºÑÐ¸Ð¼Ð°Ð»Ð½Ð¾ ID: ";
 	cin >> maxID;
 
 	bool found = false;
 	for (int i = 0; i < currentVoyages; i++) {
 		if (voyages[i].voyageID >= minID && voyages[i].voyageID <= maxID) {
-			cout << "Ìîðñêî ïúòóâàíå ¹" << voyages[i].voyageID << endl;
-			cout << "Ìàðøðóò: " << voyages[i].route << endl;
-			cout << "Èìå íà êîðàáà: " << voyages[i].shipName << endl;
-			cout << "Èìå íà êàïèòàíà: " << voyages[i].captainName << endl;
-			cout << "Öåíà íà áèëåòè ïúðâà êëàñà: " << voyages[i].ticketPriceFirstClass << endl;
-			cout << "Öåíà íà áèëåòè âòîðà êëàñà: " << voyages[i].ticketPriceSecondClass << endl;
-			cout << "Áðîé ïúòíèöè: " << voyages[i].amountOfPassengers << endl;
-			cout << "Äàòà íà òðúãâàíå: " << voyages[i].departureDate << endl;
-			cout << "Äàòà íà ïðèñòèãàíå: " << voyages[i].arrivalDate << endl;
-			cout << "Ñòàòóñ: " << voyages[i].status << endl;
+			cout << "ÐœÐ¾Ñ€ÑÐºÐ¾ Ð¿ÑŠÑ‚ÑƒÐ²Ð°Ð½Ðµ â„–" << voyages[i].voyageID << endl;
+			cout << "ÐœÐ°Ñ€ÑˆÑ€ÑƒÑ‚: " << voyages[i].route << endl;
+			cout << "Ð˜Ð¼Ðµ Ð½Ð° ÐºÐ¾Ñ€Ð°Ð±Ð°: " << voyages[i].shipName << endl;
+			cout << "Ð˜Ð¼Ðµ Ð½Ð° ÐºÐ°Ð¿Ð¸Ñ‚Ð°Ð½Ð°: " << voyages[i].captainName << endl;
+			cout << "Ð¦ÐµÐ½Ð° Ð½Ð° Ð±Ð¸Ð»ÐµÑ‚Ð¸ Ð¿ÑŠÑ€Ð²Ð° ÐºÐ»Ð°ÑÐ°: " << voyages[i].ticketPriceFirstClass << endl;
+			cout << "Ð¦ÐµÐ½Ð° Ð½Ð° Ð±Ð¸Ð»ÐµÑ‚Ð¸ Ð²Ñ‚Ð¾Ñ€Ð° ÐºÐ»Ð°ÑÐ°: " << voyages[i].ticketPriceSecondClass << endl;
+			cout << "Ð‘Ñ€Ð¾Ð¹ Ð¿ÑŠÑ‚Ð½Ð¸Ñ†Ð¸: " << voyages[i].amountOfPassengers << endl;
+			cout << "Ð”Ð°Ñ‚Ð° Ð½Ð° Ñ‚Ñ€ÑŠÐ³Ð²Ð°Ð½Ðµ: " << voyages[i].departureDate << endl;
+			cout << "Ð”Ð°Ñ‚Ð° Ð½Ð° Ð¿Ñ€Ð¸ÑÑ‚Ð¸Ð³Ð°Ð½Ðµ: " << voyages[i].arrivalDate << endl;
+			cout << "Ð¡Ñ‚Ð°Ñ‚ÑƒÑ: " << voyages[i].status << endl;
 			found = true;
 		}
 	}
 	if (!found) {
-		cout << "Íÿìà ïúòóâàíèÿ â òîçè äèàïàçîí!" << endl;
+		cout << "ÐÑÐ¼Ð° Ð¿ÑŠÑ‚ÑƒÐ²Ð°Ð½Ð¸Ñ Ð² Ñ‚Ð¾Ð·Ð¸ Ð´Ð¸Ð°Ð¿Ð°Ð·Ð¾Ð½!" << endl;
 	}
 	system("pause");
 }
 void searchVoyagesByDestination() {
 	system("cls");
-	cout << "Òúðñåíå íà ìîðñêè ïúòóâàíèÿ ïî äåñòèíàöèÿ" << endl;
+	cout << "Ð¢ÑŠÑ€ÑÐµÐ½Ðµ Ð½Ð° Ð¼Ð¾Ñ€ÑÐºÐ¸ Ð¿ÑŠÑ‚ÑƒÐ²Ð°Ð½Ð¸Ñ Ð¿Ð¾ Ð´ÐµÑÑ‚Ð¸Ð½Ð°Ñ†Ð¸Ñ" << endl;
 	string destination;
-	cout << "Âúâåäåòå äåñòèíàöèÿ: ";
+	cout << "Ð’ÑŠÐ²ÐµÐ´ÐµÑ‚Ðµ Ð´ÐµÑÑ‚Ð¸Ð½Ð°Ñ†Ð¸Ñ: ";
 	cin.ignore();
 	getline(cin, destination);
 	bool found = false;
 	for (int i = 0; i < currentVoyages; i++)
 		if (voyages[i].route == destination) {
-			cout << "Ìîðñêî ïúòóâàíå ¹" << voyages[i].voyageID << endl;
-			cout << "Ìàðøðóò: " << voyages[i].route << endl;
-			cout << "Èìå íà êîðàáà: " << voyages[i].shipName << endl;
-			cout << "Èìå íà êàïèòàíà: " << voyages[i].captainName << endl;
-			cout << "Öåíà íà áèëåòè ïúðâà êëàñà: " << voyages[i].ticketPriceFirstClass << endl;
-			cout << "Öåíà íà áèëåòè âòîðà êëàñà: " << voyages[i].ticketPriceSecondClass << endl;
-			cout << "Áðîé ïúòíèöè: " << voyages[i].amountOfPassengers << endl;
-			cout << "Äàòà íà òðúãâàíå: " << voyages[i].departureDate << endl;
-			cout << "Äàòà íà ïðèñòèãàíå: " << voyages[i].arrivalDate << endl;
-			cout << "Ñòàòóñ: " << voyages[i].status << endl;
+			cout << "ÐœÐ¾Ñ€ÑÐºÐ¾ Ð¿ÑŠÑ‚ÑƒÐ²Ð°Ð½Ðµ â„–" << voyages[i].voyageID << endl;
+			cout << "ÐœÐ°Ñ€ÑˆÑ€ÑƒÑ‚: " << voyages[i].route << endl;
+			cout << "Ð˜Ð¼Ðµ Ð½Ð° ÐºÐ¾Ñ€Ð°Ð±Ð°: " << voyages[i].shipName << endl;
+			cout << "Ð˜Ð¼Ðµ Ð½Ð° ÐºÐ°Ð¿Ð¸Ñ‚Ð°Ð½Ð°: " << voyages[i].captainName << endl;
+			cout << "Ð¦ÐµÐ½Ð° Ð½Ð° Ð±Ð¸Ð»ÐµÑ‚Ð¸ Ð¿ÑŠÑ€Ð²Ð° ÐºÐ»Ð°ÑÐ°: " << voyages[i].ticketPriceFirstClass << endl;
+			cout << "Ð¦ÐµÐ½Ð° Ð½Ð° Ð±Ð¸Ð»ÐµÑ‚Ð¸ Ð²Ñ‚Ð¾Ñ€Ð° ÐºÐ»Ð°ÑÐ°: " << voyages[i].ticketPriceSecondClass << endl;
+			cout << "Ð‘Ñ€Ð¾Ð¹ Ð¿ÑŠÑ‚Ð½Ð¸Ñ†Ð¸: " << voyages[i].amountOfPassengers << endl;
+			cout << "Ð”Ð°Ñ‚Ð° Ð½Ð° Ñ‚Ñ€ÑŠÐ³Ð²Ð°Ð½Ðµ: " << voyages[i].departureDate << endl;
+			cout << "Ð”Ð°Ñ‚Ð° Ð½Ð° Ð¿Ñ€Ð¸ÑÑ‚Ð¸Ð³Ð°Ð½Ðµ: " << voyages[i].arrivalDate << endl;
+			cout << "Ð¡Ñ‚Ð°Ñ‚ÑƒÑ: " << voyages[i].status << endl;
 			found = true;
 		}
 
 	if (!found) {
-		cout << "Íÿìà ïúòóâàíèÿ äî òàçè äåñòèíàöèÿ!" << endl;
+		cout << "ÐÑÐ¼Ð° Ð¿ÑŠÑ‚ÑƒÐ²Ð°Ð½Ð¸Ñ Ð´Ð¾ Ñ‚Ð°Ð·Ð¸ Ð´ÐµÑÑ‚Ð¸Ð½Ð°Ñ†Ð¸Ñ!" << endl;
 	}
 	system("pause");
 }
@@ -186,7 +194,43 @@ void orderVoyagesByDestination() {
 	Menu();
 
 }
-	// Implement a outside file work structure
+void saveVoyagesToFile()
+{
+    ofstream outputfile("voyages.dat", ios::binary);
+    if (!outputfile) {
+        cerr << "Ð¤Ð°Ð¹Ð»ÑŠÑ‚ Ð½Ðµ Ð¼Ð¾Ð¶Ðµ Ð´Ð° Ð±ÑŠÐ´Ðµ Ð¾Ñ‚Ð²Ð¾Ñ€ÐµÐ½ Ð·Ð° Ð·Ð°Ð¿Ð¸Ñ!" << endl;
+        return;
+    }
+    outputfile.write((const char*)&currentVoyages, sizeof(currentVoyages));
+    outputfile.write((const char*)voyages, sizeof(seaTrips) * currentVoyages);
+    outputfile.close();
+}
+
+void readVoyagesFromFile()
+{
+    ifstream inputfile("voyages.dat", ios::binary);
+    if (!inputfile) {
+        cerr << "Ð¤Ð°Ð¹Ð»ÑŠÑ‚ Ð½Ðµ Ð¼Ð¾Ð¶Ðµ Ð´Ð° Ð±ÑŠÐ´Ðµ Ð¾Ñ‚Ð²Ð¾Ñ€ÐµÐ½ Ð·Ð° Ñ‡ÐµÑ‚ÐµÐ½Ðµ!" << endl;
+        return;
+    }
+    inputfile.read((char*)&currentVoyages, sizeof(currentVoyages));
+    inputfile.read((char*)voyages, sizeof(seaTrips) * currentVoyages);
+    inputfile.close();
+    for (int i = 0; i < currentVoyages; i++) {
+        cout << "ÐœÐ¾Ñ€ÑÐºÐ¾ Ð¿ÑŠÑ‚ÑƒÐ²Ð°Ð½Ðµ â„–" << voyages[i].voyageID << endl;
+        cout << "ÐœÐ°Ñ€ÑˆÑ€ÑƒÑ‚: " << voyages[i].route << endl;
+        cout << "Ð˜Ð¼Ðµ Ð½Ð° ÐºÐ¾Ñ€Ð°Ð±Ð°: " << voyages[i].shipName << endl;
+        cout << "Ð˜Ð¼Ðµ Ð½Ð° ÐºÐ°Ð¿Ð¸Ñ‚Ð°Ð½Ð°: " << voyages[i].captainName << endl;
+        cout << "Ð¦ÐµÐ½Ð° Ð½Ð° Ð±Ð¸Ð»ÐµÑ‚Ð¸ Ð¿ÑŠÑ€Ð²Ð° ÐºÐ»Ð°ÑÐ°: " << voyages[i].ticketPriceFirstClass << endl;
+        cout << "Ð¦ÐµÐ½Ð° Ð½Ð° Ð±Ð¸Ð»ÐµÑ‚Ð¸ Ð²Ñ‚Ð¾Ñ€Ð° ÐºÐ»Ð°ÑÐ°: " << voyages[i].ticketPriceSecondClass << endl;
+        cout << "Ð‘Ñ€Ð¾Ð¹ Ð¿ÑŠÑ‚Ð½Ð¸Ñ†Ð¸: " << voyages[i].amountOfPassengers << endl;
+        cout << "Ð”Ð°Ñ‚Ð° Ð½Ð° Ñ‚Ñ€ÑŠÐ³Ð²Ð°Ð½Ðµ: " << voyages[i].departureDate << endl;
+        cout << "Ð”Ð°Ñ‚Ð° Ð½Ð° Ð¿Ñ€Ð¸ÑÑ‚Ð¸Ð³Ð°Ð½Ðµ: " << voyages[i].arrivalDate << endl;
+        cout << "Ð¡Ñ‚Ð°Ñ‚ÑƒÑ: " << voyages[i].status << endl;
+    }
+    system("pause");
+}
+
 
 
 int main() {
